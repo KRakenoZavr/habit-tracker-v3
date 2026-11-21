@@ -1,7 +1,7 @@
 ---
 id: T-0015
 title: Check-in and stats types, check-in day rule and streak computation
-status: draft  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: core  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -56,11 +56,12 @@ def compute_stats(habit: Habit, days: Sequence[date], today: date) -> HabitStats
 2. `streaks.py`: daily runs over a sorted set of days; weekly: count per `week_start`, then runs of consecutive met weeks (step 7 days).
 3. Tests first in `tests/core/test_streaks.py` with `today = date(2026, 1, 15)` (a Thursday; its week starts Mon 2026-01-12).
 
-## Acceptance criteria (daily habit; d(n) = date(2026, 1, n))
+## Acceptance criteria
+Daily habit; d(n) = date(2026, 1, n):
 - [ ] {} → current 0, longest 0, period 0/1, not done; {d13,d14} → current 2 (grace), period 0/1 — `test_daily_grace`
 - [ ] {d13,d14,d15} → current 3, period 1/1 done; {d12,d13} → current 0, longest 2 — `test_daily_current_and_broken`
 - [ ] {d10,d11,d12,d14,d15} → current 2, longest 3; {d16} ignored → total 0 — `test_daily_longest_and_future_ignored`
-## Acceptance criteria (weekly habit, target 2)
+Weekly habit, target 2:
 - [ ] weeks of Dec 29 {Dec 29, Dec 31} and Jan 5 {d5,d7} met, this week {d12} → current 2, period 1/2 not done — `test_weekly_grace_current_week`
 - [ ] same plus d14 → current 3, period 2/2 done — `test_weekly_current_week_met`
 - [ ] Dec 29 week has only one day → current 1; longest counts the longest run across a gap — `test_weekly_gap_and_longest`
@@ -74,3 +75,4 @@ def compute_stats(habit: Habit, days: Sequence[date], today: date) -> HabitStats
 
 ## Log
 - 2026-11-21 21:42 created from batch batch-M2.md (by architect)
+- 2026-11-21 21:42 status draft -> ready (by architect)
