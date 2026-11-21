@@ -1,7 +1,7 @@
 ---
 id: T-0019
 title: Check-in and stats routes
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: api  # from docs/ai/modules.yaml
 depends_on: [T-0017, T-0018]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -58,3 +58,4 @@ Exists: `services.check_in(repo, habit_id, day, today, now)`, `undo_check_in(rep
 - 2026-11-21 21:51 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
 - 2026-11-21 21:53 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:53 status in_review -> approved (by run_review): round 2
+- 2026-11-21 21:53 status approved -> integrated (by integrate): merged into int/M2
