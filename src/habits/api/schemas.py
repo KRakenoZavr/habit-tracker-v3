@@ -3,20 +3,20 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
 
 from habits import core
 
 
 class Health(BaseModel):
-    status: Literal["ok"] = "ok"
+    status: Literal["ok"]
 
 
 class HabitCreate(BaseModel):
-    name: str = Field(min_length=1, max_length=100)
-    description: str | None = Field(default=None, max_length=500)
+    name: StrictStr = Field(min_length=1, max_length=100)
+    description: StrictStr | None = Field(default=None, max_length=500)
     frequency: core.Frequency = core.Frequency.DAILY
-    target_per_week: int | None = Field(default=None, ge=1, le=7)
+    target_per_week: StrictInt | None = Field(default=None, ge=1, le=7)
 
     def to_draft(self) -> core.HabitDraft:
         return core.HabitDraft(
@@ -28,11 +28,11 @@ class HabitCreate(BaseModel):
 
 
 class HabitUpdate(BaseModel):
-    name: str | None = Field(default=None, min_length=1, max_length=100)
-    description: str | None = Field(default=None, max_length=500)
+    name: StrictStr | None = Field(default=None, min_length=1, max_length=100)
+    description: StrictStr | None = Field(default=None, max_length=500)
     frequency: core.Frequency | None = None
-    target_per_week: int | None = Field(default=None, ge=1, le=7)
-    archived: bool | None = None
+    target_per_week: StrictInt | None = Field(default=None, ge=1, le=7)
+    archived: StrictBool | None = None
 
     def to_patch(self) -> core.HabitPatch:
         description = self.description
@@ -77,7 +77,7 @@ class ErrorDetail(BaseModel):
 class ErrorBody(BaseModel):
     code: str
     message: str
-    details: list[ErrorDetail] | None = None
+    details: list[ErrorDetail] | None
 
 
 class Error(BaseModel):

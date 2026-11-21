@@ -4,7 +4,7 @@ import pytest
 from pydantic import ValidationError
 
 from habits import core
-from habits.api.schemas import Habit, HabitCreate, HabitUpdate
+from habits.api.schemas import ErrorBody, Habit, HabitCreate, HabitUpdate, Health
 from habits.api.settings import Settings
 
 
@@ -61,6 +61,26 @@ def test_habit_from_core() -> None:
     assert h.created_at == created
     dumped = h.model_dump_json()
     assert "2024-01-02T03:04:05Z" in dumped or "+00:00" in dumped
+
+
+def test_required_response_fields() -> None:
+    with pytest.raises(ValidationError):
+        Health()  # type: ignore[call-arg]
+    with pytest.raises(ValidationError):
+        ErrorBody(code="x", message="y")  # type: ignore[call-arg]
+    assert ErrorBody(code="x", message="y", details=None).details is None
+
+
+def test_strict_request_types() -> None:
+    for bad in (True, "3"):
+        with pytest.raises(ValidationError):
+            HabitCreate.model_validate({"name": "x", "target_per_week": bad})
+        with pytest.raises(ValidationError):
+            HabitUpdate.model_validate({"target_per_week": bad})
+    with pytest.raises(ValidationError):
+        HabitUpdate.model_validate({"archived": "false"})
+    with pytest.raises(ValidationError):
+        HabitCreate.model_validate({"name": 5})
 
 
 def test_field_limits() -> None:

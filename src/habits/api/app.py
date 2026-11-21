@@ -22,7 +22,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/health", operation_id="health")
     def health() -> schemas.Health:
-        return schemas.Health()
+        return schemas.Health(status="ok")
 
     return app
 

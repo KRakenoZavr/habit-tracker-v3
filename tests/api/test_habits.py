@@ -162,6 +162,35 @@ def test_commit_happens_before_response_start(migrated_db_url: str) -> None:
     assert seen_at_response_start == [[created["id"]]]
 
 
+def test_create_rejects_coerced_types(client: TestClient) -> None:
+    for bad in (True, "3"):
+        response = client.post("/habits", json={"name": "Run", "target_per_week": bad})
+        assert response.status_code == 422
+        assert response.json()["error"]["code"] == "validation_error"
+    assert client.get("/habits", params={"include_archived": "true"}).json() == []
+
+
+def test_update_rejects_coerced_types(client: TestClient) -> None:
+    created = _create(client, name="Read")
+    for payload in ({"archived": "false"}, {"target_per_week": True}):
+        response = client.patch(f"/habits/{created['id']}", json=payload)
+        assert response.status_code == 422
+        assert response.json()["error"]["code"] == "validation_error"
+    assert client.get(f"/habits/{created['id']}").json() == created
+
+
+def test_required_response_fields(client: TestClient) -> None:
+    assert client.get("/health").status_code == 200
+
+
+def test_openapi_required_fields() -> None:
+    from habits.api.app import app
+
+    schemas = app.openapi()["components"]["schemas"]
+    assert "status" in schemas["Health"]["required"]
+    assert "details" in schemas["ErrorBody"]["required"]
+
+
 def test_module_app_importable() -> None:
     from habits.api.app import app
 
