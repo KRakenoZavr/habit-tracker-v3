@@ -6,7 +6,7 @@ import pytest
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
 
-from habits.core import Frequency, HabitDraft
+from habits.core import Frequency, HabitDraft, HabitNotFound
 from habits.storage import HabitRow, SqlHabitRepository, make_engine, make_session_factory
 
 CREATED = datetime(2024, 3, 5, 12, 30, 15, tzinfo=UTC)
@@ -100,3 +100,46 @@ def test_update_delete_do_not_commit(session: Session) -> None:
     assert repo.delete_habit(added.id) is True
     session.rollback()
     assert repo.get_habit(added.id) == added
+
+
+@pytest.fixture
+def two_sessions(migrated_db_url: str) -> Iterator[tuple[Session, Session]]:
+    engine = make_engine(migrated_db_url)
+    factory = make_session_factory(engine)
+    with factory() as a, factory() as b:
+        yield a, b
+    engine.dispose()
+
+
+def test_racing_deletes(two_sessions: tuple[Session, Session]) -> None:
+    a, b = two_sessions
+    habit = SqlHabitRepository(a).add_habit(HabitDraft(name="Race"), CREATED)
+    a.commit()
+    repo_b = SqlHabitRepository(b)
+    assert repo_b.get_habit(habit.id) is not None
+    assert SqlHabitRepository(a).delete_habit(habit.id) is True
+    a.commit()
+    assert repo_b.delete_habit(habit.id) is False
+
+
+def test_update_vanished_row(two_sessions: tuple[Session, Session]) -> None:
+    a, b = two_sessions
+    habit = SqlHabitRepository(a).add_habit(HabitDraft(name="Gone"), CREATED)
+    a.commit()
+    repo_b = SqlHabitRepository(b)
+    assert repo_b.get_habit(habit.id) is not None
+    assert SqlHabitRepository(a).delete_habit(habit.id) is True
+    a.commit()
+    with pytest.raises(HabitNotFound):
+        repo_b.update_habit(replace(habit, name="Changed"))
+
+
+def test_out_of_range_ids(session: Session) -> None:
+    repo = SqlHabitRepository(session)
+    habit = repo.add_habit(HabitDraft(name="Edge"), CREATED)
+    for bad in (2**63, -(2**63) - 1):
+        assert repo.get_habit(bad) is None
+        assert repo.delete_habit(bad) is False
+        with pytest.raises(HabitNotFound):
+            repo.update_habit(replace(habit, id=bad))
+    assert repo.get_habit(2**63 - 1) is None

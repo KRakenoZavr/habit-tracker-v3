@@ -1,10 +1,18 @@
 from datetime import UTC, datetime
+from typing import Any, cast
 
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
 
-from habits.core import Frequency, Habit, HabitDraft, HabitRepository
+from habits.core import Frequency, Habit, HabitDraft, HabitNotFound, HabitRepository
 from habits.storage.models import HabitRow
+
+INT64_MIN = -(2**63)
+INT64_MAX = 2**63 - 1
+
+
+def _in_range(habit_id: int) -> bool:
+    return INT64_MIN <= habit_id <= INT64_MAX
 
 
 def _to_habit(row: HabitRow) -> Habit:
@@ -37,6 +45,8 @@ class SqlHabitRepository(HabitRepository):
         return _to_habit(row)
 
     def get_habit(self, habit_id: int) -> Habit | None:
+        if not _in_range(habit_id):
+            return None
         row = self._session.get(HabitRow, habit_id)
         return None if row is None else _to_habit(row)
 
@@ -47,9 +57,9 @@ class SqlHabitRepository(HabitRepository):
         return [_to_habit(row) for row in self._session.scalars(stmt)]
 
     def update_habit(self, habit: Habit) -> Habit:
-        row = self._session.get(HabitRow, habit.id)
+        row = self._session.get(HabitRow, habit.id, populate_existing=True) if _in_range(habit.id) else None
         if row is None:
-            raise LookupError(f"habit {habit.id} does not exist")
+            raise HabitNotFound(f"habit {habit.id} not found")
         row.name = habit.name
         row.description = habit.description
         row.frequency = habit.frequency.value
@@ -59,9 +69,10 @@ class SqlHabitRepository(HabitRepository):
         return _to_habit(row)
 
     def delete_habit(self, habit_id: int) -> bool:
-        row = self._session.get(HabitRow, habit_id)
-        if row is None:
+        if not _in_range(habit_id):
             return False
-        self._session.delete(row)
-        self._session.flush()
-        return True
+        result = cast(
+            "sa.CursorResult[Any]",
+            self._session.execute(sa.delete(HabitRow).where(HabitRow.id == habit_id)),
+        )
+        return result.rowcount == 1
