@@ -1,6 +1,6 @@
 ---
 status: frozen         # draft -> frozen (set by the human when Phase 0 is approved)
-frozen_at: none        # commit sha of the Phase 0 commit
+frozen_at: c8d6ed0     # commit sha of the Phase 0 commit
 date: 2026-11-21
 authors: [human, architect]
 ---
