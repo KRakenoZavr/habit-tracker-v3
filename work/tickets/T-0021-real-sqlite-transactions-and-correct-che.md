@@ -1,7 +1,7 @@
 ---
 id: T-0021
 title: Real SQLite transactions and correct check-in conflict mapping
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -80,3 +80,4 @@ def _on_begin(conn):
 - 2026-11-21 22:07 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
 - 2026-11-21 22:10 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 22:10 status in_review -> approved (by run_review): round 2
+- 2026-11-21 22:11 status approved -> integrated (by integrate): merged into int/M2
