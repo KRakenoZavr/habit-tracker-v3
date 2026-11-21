@@ -1,7 +1,7 @@
 ---
 id: T-0006
 title: SqlHabitRepository for habits
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: [T-0002, T-0005]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -12,8 +12,8 @@ lock_resources: []       # lock files this ticket must touch (see .agents/config
 difficulty: M  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
-review_round: 0
-base: none               # set by run_executor.py
+review_round: 1
+base: int/M1  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/storage/test_repository.py -x -q", "uv run --frozen ruff check src/habits/storage tests/storage", "uv run --frozen pyright src/habits/storage"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
@@ -61,3 +61,9 @@ Core types: `Habit(id, name, description, frequency, target_per_week, archived, 
 ## Log
 - 2026-11-21 21:13 created from batch batch-M1.md (by architect)
 - 2026-11-21 21:13 status draft -> ready (by architect): batch lint clean
+- 2026-11-21 21:27 status ready -> in_progress (by run_executor): tier M, claude-cli sonnet
+- 2026-11-21 21:28 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:28 status in_review -> changes_requested (by run_review): round 1
+- 2026-11-21 21:28 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
+- 2026-11-21 21:29 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:29 status in_review -> approved (by run_review): round 2
