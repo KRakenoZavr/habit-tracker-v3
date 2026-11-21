@@ -87,8 +87,45 @@ def violations(src_root: Path) -> list[str]:
     return result
 
 
+def migration_violations(migrations_root: Path) -> list[str]:
+    """One "<file>: <imported>" string per forbidden storage import in migrations_root/**/*.py."""
+    prefixes = FORBIDDEN["habits.storage"]
+    result: list[str] = []
+    if not migrations_root.is_dir():
+        return result
+    for path in sorted(migrations_root.rglob("*.py")):
+        rel = path.relative_to(migrations_root).with_suffix("")
+        module = ".".join(["migrations", *rel.parts])
+        source = path.read_text(encoding="utf-8")
+        hits: set[str] = set()
+        for bases, members in _statement_imports(source, module):
+            base_hits = {b for b in bases if _is_forbidden(b, prefixes)}
+            hits.update(base_hits)
+            for member in members:
+                covered = any(member.startswith(b + ".") for b in base_hits)
+                if _is_forbidden(member, prefixes) and not covered:
+                    hits.add(member)
+        rel_path = path.relative_to(migrations_root).as_posix()
+        result.extend(f"{rel_path}: {name}" for name in sorted(hits))
+    return result
+
+
 def test_no_forbidden_imports() -> None:
     assert violations(REPO_ROOT / "src") == []
+
+
+def test_migrations_have_no_forbidden_imports() -> None:
+    assert migration_violations(REPO_ROOT / "migrations") == []
+
+
+def test_migration_scanner_detects_api_import() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        versions = root / "versions"
+        versions.mkdir()
+        (versions / "0001_bad.py").write_text("from habits.api import app\n", encoding="utf-8")
+        (versions / "0002_ok.py").write_text("import alembic\n", encoding="utf-8")
+        assert migration_violations(root) == ["versions/0001_bad.py: habits.api"]
 
 
 def test_imported_modules_absolute() -> None:
