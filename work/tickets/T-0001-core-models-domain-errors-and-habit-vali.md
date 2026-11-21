@@ -1,7 +1,7 @@
 ---
 id: T-0001
 title: Core models, domain errors and habit validation rules
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: core  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -98,3 +98,4 @@ def apply_patch(habit: Habit, patch: HabitPatch) -> Habit:
 - 2026-11-21 21:18 status changes_requested -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:18 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:18 status in_review -> approved (by run_review): round 2
+- 2026-11-21 21:19 status approved -> integrated (by integrate): merged into int/M1
