@@ -1,7 +1,7 @@
 ---
 id: T-0012
 title: Strict request types and required response fields
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: in_progress  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: api  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -13,7 +13,7 @@ difficulty: S  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
 review_round: 0
-base: none               # set by run_executor.py
+base: int/M1  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/api/test_schemas.py tests/api/test_habits.py -x -q", "uv run --frozen ruff check src/habits/api tests/api", "uv run --frozen pyright src/habits/api tests/api/test_schemas.py tests/api/test_habits.py"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
@@ -54,3 +54,4 @@ class ErrorBody(BaseModel): code: str; message: str; details: list[ErrorDetail] 
 ## Log
 - 2026-11-21 21:36 created from batch batch-M1-fix.md (by architect)
 - 2026-11-21 21:36 status draft -> ready (by architect): batch lint clean
+- 2026-11-21 21:38 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
