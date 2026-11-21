@@ -1,7 +1,7 @@
 ---
 id: T-0004
 title: Storage engine, session factory and HabitRow ORM model
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -67,3 +67,4 @@ class HabitRow(Base):
 - 2026-11-21 21:17 status blocked -> in_progress (by architect): gate failure was global (ruff linted docs/*.pyi); fixed on int/M1 and merged
 - 2026-11-21 21:17 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:19 status in_review -> approved (by run_review): round 1
+- 2026-11-21 21:19 status approved -> integrated (by integrate): merged into int/M1
