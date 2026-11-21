@@ -1,9 +1,10 @@
 """Pydantic models of the HTTP contract (names match openapi components)."""
 
-from datetime import datetime
+import re
+from datetime import date, datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, field_validator
 
 from habits import core
 
@@ -66,6 +67,55 @@ class Habit(BaseModel):
             target_per_week=h.target_per_week,
             archived=h.archived,
             created_at=h.created_at,
+        )
+
+
+class CheckInCreate(BaseModel):
+    day: date | None = None
+
+    @field_validator("day", mode="before")
+    @classmethod
+    def _no_numbers(cls, v: object) -> object:
+        if isinstance(v, int | float):
+            raise ValueError("day must be a YYYY-MM-DD string")
+        if isinstance(v, str) and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", v):
+            raise ValueError("day must be a YYYY-MM-DD string")
+        return v
+
+
+class CheckIn(BaseModel):
+    habit_id: int
+    day: date
+    created_at: datetime
+
+    @classmethod
+    def from_core(cls, c: core.CheckIn) -> "CheckIn":
+        return cls(habit_id=c.habit_id, day=c.day, created_at=c.created_at)
+
+
+class Stats(BaseModel):
+    habit_id: int
+    streak_unit: Literal["day", "week"]
+    current_streak: int = Field(ge=0)
+    longest_streak: int = Field(ge=0)
+    total_checkins: int = Field(ge=0)
+    period_count: int = Field(ge=0)
+    period_target: int = Field(ge=1)
+    period_done: bool
+    as_of: date
+
+    @classmethod
+    def from_core(cls, s: core.HabitStats) -> "Stats":
+        return cls(
+            habit_id=s.habit_id,
+            streak_unit=s.streak_unit,
+            current_streak=s.current_streak,
+            longest_streak=s.longest_streak,
+            total_checkins=s.total_checkins,
+            period_count=s.period_count,
+            period_target=s.period_target,
+            period_done=s.period_done,
+            as_of=s.as_of,
         )
 
 
