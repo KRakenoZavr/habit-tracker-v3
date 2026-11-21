@@ -5,7 +5,7 @@ status: blocked  # draft|ready|in_progress|in_review|changes_requested|approved|
 milestone: M2
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
-files_owned: [src/habits/storage/db.py, src/habits/storage/repository.py, tests/storage/test_transactions.py]  # exact paths (globs allowed), within the tier's max. The ONLY files the executor may change.
+files_owned: [src/habits/storage/db.py, src/habits/storage/repository.py, tests/storage/test_transactions.py, tests/storage/test_repository.py]  # exact paths (globs allowed), within the tier's max. The ONLY files the executor may change.
                          # Tests first: include the test file(s) that prove the Acceptance criteria.
 files_read: []  # contracts/stubs inlined into the pack. Keep tiny.
 lock_resources: []       # lock files this ticket must touch (see .agents/config.json)
@@ -31,7 +31,7 @@ def _on_connect(dbapi_connection, connection_record):
     # existing: PRAGMA foreign_keys=ON
 @event.listens_for(engine, "begin")
 def _on_begin(conn):
-    conn.exec_driver_sql("BEGIN")                    # SQLAlchemy now owns BEGIN, so savepoints nest inside it
+    conn.exec_driver_sql("BEGIN IMMEDIATE")          # ADR-0006: SQLAlchemy owns BEGIN; write lock taken up front
 # repository.py add_checkin, on IntegrityError from the savepoint:
 #   if self.get_habit(habit_id) is None: raise HabitNotFound(f"habit {habit_id} not found")
 #   else: raise CheckInExists(message)
@@ -54,6 +54,14 @@ def _on_begin(conn):
 - Archive-vs-check-in race (accepted, ADR-0002). Migrations.
 
 ## Notes from architect
+- Architect decision on your BLOCKED report (ADR-0006): use `BEGIN IMMEDIATE`, not plain BEGIN, and no WAL.
+  You now own `tests/storage/test_repository.py`: rewrite `test_racing_deletes` and `test_update_vanished_row` so the
+  two sessions' transactions run one after the other (A deletes + commits, THEN B acts in a fresh transaction).
+  Never keep two write transactions open at once in one thread: the second waits 5 s and fails.
+- Extra criterion: two sessions, A begins (any SELECT) and stays open; B's first statement must fail with
+  OperationalError "database is locked" after a short timeout — build that engine with
+  `create_engine(url, connect_args={"timeout": 0.2, "check_same_thread": False})` plus the same listeners, or skip
+  this check if it needs a second factory API; do not change `make_engine`'s signature.
 - SQLite allows one writer: in two-session tests commit or roll back A before B writes, or B waits on the lock.
 
 ## Log

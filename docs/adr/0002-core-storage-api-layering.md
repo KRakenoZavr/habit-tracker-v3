@@ -21,7 +21,7 @@ No auth and no users table.
 
 ## Consequences
 - Easier: core tests use an in-memory fake repository; each ticket stays inside one module.
-- Accepted: two simultaneous PATCHes of the same habit can lose one update (read-modify-write, single user,
+- Resolved by ADR-0006 (BEGIN IMMEDIATE serializes request transactions); kept for history — Accepted: two simultaneous PATCHes of the same habit can lose one update (read-modify-write, single user,
   SQLite). A PATCH racing a DELETE returns 404, never 500 (M1 review). Likewise a check-in racing an archive
   may be stored for the just-archived habit; a check-in racing a DELETE returns 404 (M2 review).
 - Harder: row ↔ dataclass mapping code in storage; adding users later needs a new ADR and an `owner_id` migration.
