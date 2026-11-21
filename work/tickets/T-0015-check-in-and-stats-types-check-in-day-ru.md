@@ -1,7 +1,7 @@
 ---
 id: T-0015
 title: Check-in and stats types, check-in day rule and streak computation
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: core  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -82,3 +82,4 @@ Weekly habit, target 2:
 - 2026-11-21 21:43 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
 - 2026-11-21 21:44 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:44 status in_review -> approved (by run_review): round 2
+- 2026-11-21 21:45 status approved -> integrated (by integrate): merged into int/M2
