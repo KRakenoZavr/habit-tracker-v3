@@ -1,7 +1,7 @@
 ---
 id: T-0012
 title: Strict request types and required response fields
-status: in_progress  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: api  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -55,3 +55,5 @@ class ErrorBody(BaseModel): code: str; message: str; details: list[ErrorDetail] 
 - 2026-11-21 21:36 created from batch batch-M1-fix.md (by architect)
 - 2026-11-21 21:36 status draft -> ready (by architect): batch lint clean
 - 2026-11-21 21:38 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
+- 2026-11-21 21:39 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:40 status in_review -> approved (by run_review): round 1
