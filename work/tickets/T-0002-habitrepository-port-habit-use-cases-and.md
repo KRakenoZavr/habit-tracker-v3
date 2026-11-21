@@ -1,7 +1,7 @@
 ---
 id: T-0002
 title: HabitRepository port, habit use cases and in-memory fake
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: escalated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: core  # from docs/ai/modules.yaml
 depends_on: [T-0001]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -13,7 +13,7 @@ difficulty: S  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
 review_round: 0
-base: none               # set by run_executor.py
+base: int/M1  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/core/test_services.py -x -q", "uv run --frozen ruff check src/habits/core tests/core", "uv run --frozen pyright src/habits/core"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
@@ -67,3 +67,6 @@ Existing (from the previous ticket): `Habit`, `HabitDraft`, `HabitPatch`, `Frequ
 ## Log
 - 2026-11-21 21:13 created from batch batch-M1.md (by architect)
 - 2026-11-21 21:13 status draft -> ready (by architect): batch lint clean
+- 2026-11-21 21:20 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
+- 2026-11-21 21:20 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:21 status in_review -> escalated (by run_review): round 1
