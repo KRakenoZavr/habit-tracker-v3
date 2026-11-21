@@ -1,7 +1,7 @@
 ---
 id: T-0022
 title: Strict ISO dates in query/path, reject JSON null body, one clock read per request
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: api  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -67,3 +67,4 @@ def get_today(request: Request, now: datetime = Depends(get_now)) -> date: ...
 - 2026-11-21 22:02 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
 - 2026-11-21 22:03 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 22:03 status in_review -> approved (by run_review): round 2
+- 2026-11-21 22:04 status approved -> integrated (by integrate): merged into int/M2
