@@ -1,7 +1,7 @@
 ---
 id: T-0018
 title: Pydantic schemas for check-ins and stats
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: api  # from docs/ai/modules.yaml
 depends_on: [T-0015]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -63,3 +63,4 @@ Exists: `core.CheckIn(habit_id, day, created_at)`, `core.HabitStats(...)` with t
 - 2026-11-21 21:46 status changes_requested -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:47 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:47 status in_review -> approved (by run_review): round 2
+- 2026-11-21 21:47 status approved -> integrated (by integrate): merged into int/M2
