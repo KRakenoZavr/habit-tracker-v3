@@ -100,3 +100,4 @@ Details: `docs/plan/milestones.md`.
 ## 10. Drift log (architect appends one line per milestone; the only part edited after freezing)
 | Milestone | Deviation from this baseline | ADR |
 |---|---|---|
+| M1 | none in scope or shape; review added hardening (strict JSON bodies, HTTP-error envelope, int64 ids, atomic delete). Accepted: lost update on concurrent PATCH | ADR-0002 (consequence added) |
