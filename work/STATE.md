@@ -18,7 +18,7 @@ Milestone: M2   Branch: int/M2   blocked 1 · integrated 7
 - none
 
 ## Needs architect
-- T-0021 blocked: Interface recipe (isolation_level=None + explicit BEGIN) makes B's get_habit SELECT hold a real read transaction, so A's commit of a delete fails with 'database is locked' in existing tests/storage/test_repository.py::test_racing_deletes and ::test_update_vanished_row (not in files_owned). Fix needs either those tests to end B's read txn (rollback) before A commits, or WAL journal mode (PRAGMA journal_mode=WAL in db.py connect listener) - architect decision. New tests in test_transactions.py pass; impl in db.py/repository.py is done.
+- T-0021 blocked: rebase onto int/M2 failed; architect must resolve
 <!-- auto:end -->
 
 ## Next action (architect)
