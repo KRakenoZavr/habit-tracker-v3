@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from datetime import date
 
-from habits.core.errors import InvalidHabit
+from habits.core.errors import FutureCheckIn, InvalidHabit
 from habits.core.models import (
     DESCRIPTION_MAX,
     NAME_MAX,
@@ -50,6 +51,11 @@ def validate_draft(draft: HabitDraft) -> HabitDraft:
         description=_check_description(draft.description),
         target_per_week=_check_target(draft.frequency, draft.target_per_week),
     )
+
+
+def validate_checkin_day(day: date, today: date) -> None:
+    if day > today:
+        raise FutureCheckIn(f"{day} is after today {today}")
 
 
 def apply_patch(habit: Habit, patch: HabitPatch) -> Habit:
