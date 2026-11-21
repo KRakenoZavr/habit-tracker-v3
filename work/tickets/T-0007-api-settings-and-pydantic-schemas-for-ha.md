@@ -1,7 +1,7 @@
 ---
 id: T-0007
 title: API settings and Pydantic schemas for habits and errors
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: api  # from docs/ai/modules.yaml
 depends_on: [T-0001]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -76,3 +76,4 @@ class Error(BaseModel): error: ErrorBody
 - 2026-11-21 21:21 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:21 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:22 status in_review -> approved (by run_review): round 1
+- 2026-11-21 21:22 status approved -> integrated (by integrate): merged into int/M1
