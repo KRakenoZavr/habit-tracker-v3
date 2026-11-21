@@ -31,7 +31,10 @@ packages = ["src/habits"]
 [tool.ruff]
 line-length = 110
 target-version = "py312"
-extend-exclude = ["scripts/agent", "work", ".worktrees"]
+extend-exclude = ["scripts/agent", "work", ".worktrees", "docs"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["habits", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
