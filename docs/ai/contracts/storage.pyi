@@ -15,7 +15,8 @@ from habits.core import CheckIn, Habit, HabitDraft, HabitRepository
 # ---------------------------------------------------------------- habits/storage/db.py
 def make_engine(url: str) -> Engine:
     """create_engine(url). For sqlite URLs: connect_args={"check_same_thread": False} and a "connect" event
-    listener that runs PRAGMA foreign_keys=ON on every DBAPI connection."""
+    listener that runs PRAGMA foreign_keys=ON on every DBAPI connection, sets isolation_level=None, and a "begin"
+    listener that emits BEGIN (SQLAlchemy pysqlite recipe: savepoints always nest in a real transaction)."""
 def make_session_factory(engine: Engine) -> sessionmaker[Session]:
     """sessionmaker(bind=engine, expire_on_commit=False)."""
 
