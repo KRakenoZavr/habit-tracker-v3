@@ -3,6 +3,7 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from habits.api.schemas import Error
 from habits.core import DomainError
@@ -16,6 +17,9 @@ STATUS_BY_CODE: dict[str, int] = {
     "invalid_range": 422,
     "future_checkin": 422,
 }
+
+
+HTTP_CODES: dict[int, str] = {404: "not_found", 405: "method_not_allowed"}
 
 
 def _envelope(code: str, message: str, details: list[dict[str, Any]] | None) -> dict[str, Any]:
@@ -38,6 +42,17 @@ async def _validation_error_handler(_: Request, exc: Exception) -> JSONResponse:
     )
 
 
+async def _http_error_handler(_: Request, exc: Exception) -> JSONResponse:
+    assert isinstance(exc, StarletteHTTPException)
+    code = HTTP_CODES.get(exc.status_code, f"http_{exc.status_code}")
+    return JSONResponse(
+        status_code=exc.status_code,
+        headers=exc.headers,
+        content=_envelope(code, str(exc.detail), None),
+    )
+
+
 def install_error_handlers(app: FastAPI) -> None:
+    app.add_exception_handler(StarletteHTTPException, _http_error_handler)
     app.add_exception_handler(DomainError, _domain_error_handler)
     app.add_exception_handler(RequestValidationError, _validation_error_handler)

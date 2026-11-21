@@ -2,6 +2,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pydantic import BaseModel
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from habits.api.errors import STATUS_BY_CODE, install_error_handlers
 from habits.core import (
@@ -79,6 +80,34 @@ def test_unknown_code_is_400() -> None:
     resp = TestClient(_app()).get("/raise/weird_code")
     assert resp.status_code == 400
     assert resp.json()["error"]["code"] == "weird_code"
+
+
+def test_405_envelope(client: TestClient) -> None:
+    resp = client.put("/habits")
+    assert resp.status_code == 405
+    assert resp.json() == {
+        "error": {"code": "method_not_allowed", "message": "Method Not Allowed", "details": None}
+    }
+    assert "allow" in resp.headers
+
+
+def test_unknown_route_envelope(client: TestClient) -> None:
+    resp = client.get("/nope")
+    assert resp.status_code == 404
+    assert resp.json() == {"error": {"code": "not_found", "message": "Not Found", "details": None}}
+
+
+def test_other_http_error_code() -> None:
+    app = _app()
+
+    @app.get("/teapot")
+    def teapot() -> None:
+        raise StarletteHTTPException(status_code=418, detail="short", headers={"X-A": "b"})
+
+    resp = TestClient(app).get("/teapot")
+    assert resp.status_code == 418
+    assert resp.json()["error"]["code"] == "http_418"
+    assert resp.headers["x-a"] == "b"
 
 
 def test_validation_error_envelope() -> None:
