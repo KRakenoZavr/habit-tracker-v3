@@ -1,7 +1,7 @@
 ---
 id: T-0011
 title: Alembic env uses a supplied connection; stronger drift checks
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -51,3 +51,4 @@ Fixture available from `tests/conftest.py`: `alembic_config(url) -> Config`, `mi
 - 2026-11-21 21:37 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:38 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:38 status in_review -> approved (by run_review): round 1
+- 2026-11-21 21:38 status approved -> integrated (by integrate): merged into int/M1
