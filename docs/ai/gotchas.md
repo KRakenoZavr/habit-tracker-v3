@@ -1,6 +1,6 @@
 ---
 covers: [src/**]
-verified_at: none
+verified_at: cc7dbb2
 owner: architect
 ---
 # Gotchas (learned failure modes)

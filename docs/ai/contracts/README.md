@@ -1,6 +1,6 @@
 ---
 covers: [docs/ai/contracts/**]
-verified_at: none
+verified_at: cc7dbb2
 owner: architect
 ---
 # Contracts

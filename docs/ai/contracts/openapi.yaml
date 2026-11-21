@@ -1,5 +1,5 @@
 # covers: [src/habits/api/**]
-# verified_at: none
+# verified_at: cc7dbb2
 # owner: architect
 # Source of truth for the HTTP API (ADR-0004). tests/api/test_contract.py checks app.openapi() against this file.
 openapi: 3.1.0

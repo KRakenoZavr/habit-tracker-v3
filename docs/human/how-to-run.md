@@ -1,6 +1,6 @@
 ---
 covers: [AGENTS.md, .agents/config.json, pyproject.toml, alembic.ini]
-verified_at: none
+verified_at: cc7dbb2
 owner: architect
 ---
 # How to run

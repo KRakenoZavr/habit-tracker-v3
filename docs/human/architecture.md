@@ -1,6 +1,6 @@
 ---
 covers: [docs/ai/modules.yaml, docs/architecture/**, docs/adr/**]
-verified_at: none
+verified_at: cc7dbb2
 owner: architect
 ---
 # Architecture

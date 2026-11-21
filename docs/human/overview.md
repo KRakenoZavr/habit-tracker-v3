@@ -1,6 +1,6 @@
 ---
 covers: [docs/plan/**, src/**]
-verified_at: none
+verified_at: cc7dbb2
 owner: architect
 ---
 # Habit Tracker API — overview
