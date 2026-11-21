@@ -1,7 +1,7 @@
 ---
 id: T-0016
 title: CheckInRow, migration 0002 and SqlHabitRepository check-in methods
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: storage  # from docs/ai/modules.yaml
 depends_on: [T-0015]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -68,3 +68,4 @@ Core (exists): `CheckIn(habit_id, day, created_at)`, `CheckInExists` in `habits.
 - 2026-11-21 21:45 status ready -> in_progress (by run_executor): tier M, claude-cli sonnet
 - 2026-11-21 21:46 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:47 status in_review -> approved (by run_review): round 1
+- 2026-11-21 21:47 status approved -> integrated (by integrate): merged into int/M2
