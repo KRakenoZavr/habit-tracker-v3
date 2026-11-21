@@ -53,6 +53,6 @@ typeCheckingMode = "standard"
 strict = ["src"]
 
 [tool.pytest.ini_options]
-addopts = "--import-mode=importlib -p no:cacheprovider"
+addopts = "--import-mode=importlib -p no:cacheprovider --basetemp=.pytest_tmp"
 testpaths = ["tests"]
 pythonpath = ["."]

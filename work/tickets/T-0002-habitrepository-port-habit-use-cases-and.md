@@ -15,7 +15,7 @@ max_review_rounds: none       # none = budgets.max_review_rounds
 review_round: 0
 base: int/M1  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
-verify: ["uv run --frozen pytest tests/core/test_services.py -x -q", "uv run --frozen ruff check src/habits/core tests/core", "uv run --frozen pyright src/habits/core"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
+verify: ["uv run --frozen pytest tests/core/test_services.py -x -q", "uv run --frozen ruff check src/habits/core tests/core", "uv run --frozen pyright src/habits/core tests/core/test_services.py tests/core/fakes.py"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
 ## Goal
 Add the repository port and the habit CRUD use cases to `habits.core`, plus an in-memory fake repository that core tests (now and in M2) use instead of a DB.
@@ -61,6 +61,7 @@ Existing (from the previous ticket): `Habit`, `HabitDraft`, `HabitPatch`, `Frequ
 - Check-in methods on the port (M2), SQL implementation.
 
 ## Notes from architect
+- Review r1 (escalated, ticket fixed): pyright now also checks `tests/core/test_services.py` and `tests/core/fakes.py`; add the blank-name update case (`HabitPatch(name="   ")` -> InvalidHabit, stored habit unchanged).
 - Services never call the clock: `now` is a parameter.
 - pytest runs with `--import-mode=importlib` and `pythonpath=["."]`; tests have no `__init__.py`.
 
