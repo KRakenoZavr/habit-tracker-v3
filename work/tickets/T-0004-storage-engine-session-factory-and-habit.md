@@ -1,7 +1,7 @@
 ---
 id: T-0004
 title: Storage engine, session factory and HabitRow ORM model
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: in_review  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -13,7 +13,7 @@ difficulty: S  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
 review_round: 0
-base: none               # set by run_executor.py
+base: int/M1  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/storage/test_db.py -x -q", "uv run --frozen ruff check src/habits/storage tests/storage", "uv run --frozen pyright src/habits/storage"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
@@ -62,3 +62,7 @@ class HabitRow(Base):
 ## Log
 - 2026-11-21 21:13 created from batch batch-M1.md (by architect)
 - 2026-11-21 21:13 status draft -> ready (by architect): batch lint clean
+- 2026-11-21 21:14 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
+- 2026-11-21 21:16 status in_progress -> blocked (by run_loop): gates still failing after 3 worker runs
+- 2026-11-21 21:17 status blocked -> in_progress (by architect): gate failure was global (ruff linted docs/*.pyi); fixed on int/M1 and merged
+- 2026-11-21 21:17 status in_progress -> in_review (by run_executor): gates passed
