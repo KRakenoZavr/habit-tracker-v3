@@ -37,9 +37,11 @@ Data model: [data-model.mmd](../architecture/data-model.mmd).
 - [ADR-0003](../adr/0003-sqlalchemy-sync-alembic-migrations.md) SQLAlchemy sync + Alembic, explicit migrations, drift test — one schema, checked every gate.
 - [ADR-0004](../adr/0004-contract-first-openapi-error-envelope.md) hand-written OpenAPI + conformance test + one error envelope.
 - [ADR-0005](../adr/0005-habit-frequency-and-streak-rules.md) daily / N-per-week habits, ISO-week streaks with grace for the current period.
+- [ADR-0006](../adr/0006-sqlite-begin-immediate.md) every SQLite transaction is `BEGIN IMMEDIATE` — correct rollbacks and atomic read-check-write.
 
 ## Known limits and next steps
-- Single user, no auth. Two simultaneous PATCHes of the same habit can lose one update (accepted, ADR-0002).
+- Single user, no auth. Every DB transaction starts with `BEGIN IMMEDIATE`, so requests run one at a time:
+  no lost updates or check-in/archive races, at the cost of no parallel requests ([ADR-0006](../adr/0006-sqlite-begin-immediate.md)).
 - The app does not run migrations on start; run `alembic upgrade head` after every upgrade.
 - The contract test compares paths, status codes and schema names, not every field constraint.
 - Natural next steps: auth + `owner_id` (new ADR + migration), per-weekday schedules, reminders.

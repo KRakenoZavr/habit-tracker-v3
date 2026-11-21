@@ -9,6 +9,11 @@
 - `CheckIn`, `CheckInCreate`, `Stats` schemas (T-0018)
 - `POST/GET /habits/{id}/checkins`, `DELETE /habits/{id}/checkins/{day}`, `GET /habits/{id}/stats` (T-0019)
 - OpenAPI contract conformance test (T-0020)
+### Changed
+- Milestone review hardening: real SQLite transactions with `BEGIN IMMEDIATE` so a rolled-back request never leaves a check-in behind; a check-in for a just-deleted habit returns 404 (T-0021).
+- Strict `YYYY-MM-DD` dates in query/path, JSON `null` body rejected, `today` derived from the same clock read as `created_at` (T-0022).
+### Decisions
+- ADR-0006 Every SQLite transaction starts with BEGIN IMMEDIATE
 
 ## M1 — Walking skeleton: habits CRUD end to end (2026-11-21)
 ### Added
