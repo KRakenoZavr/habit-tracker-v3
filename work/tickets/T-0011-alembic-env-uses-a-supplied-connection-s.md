@@ -1,7 +1,7 @@
 ---
 id: T-0011
 title: Alembic env uses a supplied connection; stronger drift checks
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -13,7 +13,7 @@ difficulty: S  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
 review_round: 0
-base: none               # set by run_executor.py
+base: int/M1  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/storage/test_migrations.py -x -q", "uv run --frozen ruff check migrations tests/storage", "uv run --frozen pyright migrations tests/storage/test_migrations.py"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
@@ -48,3 +48,6 @@ Fixture available from `tests/conftest.py`: `alembic_config(url) -> Config`, `mi
 ## Log
 - 2026-11-21 21:36 created from batch batch-M1-fix.md (by architect)
 - 2026-11-21 21:36 status draft -> ready (by architect): batch lint clean
+- 2026-11-21 21:37 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
+- 2026-11-21 21:38 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:38 status in_review -> approved (by run_review): round 1

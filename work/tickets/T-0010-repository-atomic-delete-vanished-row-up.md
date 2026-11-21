@@ -1,7 +1,7 @@
 ---
 id: T-0010
 title: Repository - atomic delete, vanished-row update, out-of-range ids
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: in_progress  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -13,7 +13,7 @@ difficulty: S  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
 review_round: 0
-base: none               # set by run_executor.py
+base: int/M1  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/storage/test_repository.py -x -q", "uv run --frozen ruff check src/habits/storage tests/storage", "uv run --frozen pyright src/habits/storage tests/storage/test_repository.py"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
@@ -48,3 +48,4 @@ def _in_range(habit_id: int) -> bool: ...   # INT64_MIN <= habit_id <= INT64_MAX
 ## Log
 - 2026-11-21 21:36 created from batch batch-M1-fix.md (by architect)
 - 2026-11-21 21:36 status draft -> ready (by architect): batch lint clean
+- 2026-11-21 21:37 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
