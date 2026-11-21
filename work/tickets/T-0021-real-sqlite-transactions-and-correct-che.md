@@ -1,7 +1,7 @@
 ---
 id: T-0021
 title: Real SQLite transactions and correct check-in conflict mapping
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -12,7 +12,7 @@ lock_resources: []       # lock files this ticket must touch (see .agents/config
 difficulty: M  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
-review_round: 0
+review_round: 1
 base: int/M2  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/storage -x -q", "uv run --frozen ruff check src/habits/storage tests/storage", "uv run --frozen pyright src/habits/storage tests/storage/test_transactions.py"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
@@ -74,3 +74,9 @@ def _on_begin(conn):
 - 2026-11-21 22:04 status ready -> blocked (by run_executor): rebase onto int/M2 failed; architect must resolve
 - 2026-11-21 22:05 status blocked -> draft (by architect): committed previous worker WIP and rebased onto int/M2
 - 2026-11-21 22:05 status draft -> ready (by architect)
+- 2026-11-21 22:05 status ready -> in_progress (by run_executor): tier M, claude-cli sonnet
+- 2026-11-21 22:07 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 22:07 status in_review -> changes_requested (by run_review): round 1
+- 2026-11-21 22:07 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
+- 2026-11-21 22:10 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 22:10 status in_review -> approved (by run_review): round 2
