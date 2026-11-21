@@ -1,7 +1,7 @@
 ---
 id: T-0003
 title: Architecture test enforcing module import boundaries
-status: in_review  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: core  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -65,3 +65,4 @@ def violations(src_root: Path) -> list[str]:
 - 2026-11-21 21:18 status in_review -> changes_requested (by run_review): round 2
 - 2026-11-21 21:18 status changes_requested -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:19 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:19 status in_review -> approved (by run_review): round 3
