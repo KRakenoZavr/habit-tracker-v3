@@ -21,10 +21,14 @@ from habits.core.models import (
 from habits.core.ports import HabitRepository
 from habits.core.rules import apply_patch, validate_checkin_day, validate_draft
 from habits.core.services import (
+    check_in,
     create_habit,
     delete_habit,
     get_habit,
+    get_stats,
+    list_check_ins,
     list_habits,
+    undo_check_in,
     update_habit,
 )
 from habits.core.streaks import compute_stats, week_start
@@ -48,11 +52,15 @@ __all__ = [
     "InvalidHabit",
     "InvalidRange",
     "apply_patch",
+    "check_in",
     "compute_stats",
     "create_habit",
     "delete_habit",
     "get_habit",
+    "get_stats",
+    "list_check_ins",
     "list_habits",
+    "undo_check_in",
     "update_habit",
     "validate_checkin_day",
     "validate_draft",
