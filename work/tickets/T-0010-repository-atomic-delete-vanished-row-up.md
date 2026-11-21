@@ -1,7 +1,7 @@
 ---
 id: T-0010
 title: Repository - atomic delete, vanished-row update, out-of-range ids
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -51,3 +51,4 @@ def _in_range(habit_id: int) -> bool: ...   # INT64_MIN <= habit_id <= INT64_MAX
 - 2026-11-21 21:37 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:38 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:38 status in_review -> approved (by run_review): round 1
+- 2026-11-21 21:39 status approved -> integrated (by integrate): merged into int/M1
