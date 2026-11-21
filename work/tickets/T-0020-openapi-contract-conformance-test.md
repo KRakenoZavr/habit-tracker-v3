@@ -1,7 +1,7 @@
 ---
 id: T-0020
 title: OpenAPI contract conformance test
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: api  # from docs/ai/modules.yaml
 depends_on: [T-0019]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -56,3 +56,6 @@ def ref_name(schema: dict) -> str | None:
 - 2026-11-21 21:54 status in_review -> escalated (by run_review): round 1
 - 2026-11-21 21:55 status escalated -> draft (by architect): Error is published; remove discard
 - 2026-11-21 21:55 status draft -> ready (by architect)
+- 2026-11-21 21:55 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
+- 2026-11-21 21:55 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:55 status in_review -> approved (by run_review): round 1
