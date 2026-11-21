@@ -33,6 +33,17 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
+    supplied = config.attributes.get("connection")
+    if supplied is not None:
+        context.configure(
+            connection=supplied,
+            target_metadata=target_metadata,
+            render_as_batch=True,
+            compare_server_default=True,
+        )
+        with context.begin_transaction():
+            context.run_migrations()
+        return
     engine = create_engine(_database_url())
     try:
         with engine.connect() as connection:
@@ -40,6 +51,7 @@ def run_migrations_online() -> None:
                 connection=connection,
                 target_metadata=target_metadata,
                 render_as_batch=True,
+                compare_server_default=True,
             )
             with context.begin_transaction():
                 context.run_migrations()
