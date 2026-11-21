@@ -1,7 +1,7 @@
 ---
 id: T-0006
 title: SqlHabitRepository for habits
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: [T-0002, T-0005]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -67,3 +67,4 @@ Core types: `Habit(id, name, description, frequency, target_per_week, archived, 
 - 2026-11-21 21:28 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
 - 2026-11-21 21:29 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:29 status in_review -> approved (by run_review): round 2
+- 2026-11-21 21:29 status approved -> integrated (by integrate): merged into int/M1
