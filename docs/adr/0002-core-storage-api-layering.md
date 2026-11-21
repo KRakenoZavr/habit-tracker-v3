@@ -21,5 +21,7 @@ No auth and no users table.
 
 ## Consequences
 - Easier: core tests use an in-memory fake repository; each ticket stays inside one module.
+- Accepted: two simultaneous PATCHes of the same habit can lose one update (read-modify-write, single user,
+  SQLite). A PATCH racing a DELETE returns 404, never 500 (M1 review).
 - Harder: row ↔ dataclass mapping code in storage; adding users later needs a new ADR and an `owner_id` migration.
 - Must change: `docs/ai/modules.yaml` forbidden edges; `tests/test_architecture.py` enforces them.

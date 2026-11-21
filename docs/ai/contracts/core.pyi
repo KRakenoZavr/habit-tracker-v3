@@ -102,8 +102,9 @@ class HabitRepository(Protocol):
     def add_habit(self, draft: HabitDraft, created_at: datetime) -> Habit: ...   # draft already validated
     def get_habit(self, habit_id: int) -> Habit | None: ...
     def list_habits(self, include_archived: bool) -> list[Habit]: ...            # ordered by id asc
-    def update_habit(self, habit: Habit) -> Habit: ...                           # habit exists
-    def delete_habit(self, habit_id: int) -> bool: ...                           # False if missing; cascades check-ins
+    def update_habit(self, habit: Habit) -> Habit: ...                           # row gone (deleted meanwhile) -> HabitNotFound
+    def delete_habit(self, habit_id: int) -> bool: ...                           # False if missing (0 rows deleted); cascades check-ins
+    # Every method treats an id outside SQLite's signed 64-bit range as "missing" (None / False / HabitNotFound).
     # (M2)
     def add_checkin(self, habit_id: int, day: date, created_at: datetime) -> CheckIn: ...  # duplicate -> CheckInExists
     def delete_checkin(self, habit_id: int, day: date) -> bool: ...              # False if missing

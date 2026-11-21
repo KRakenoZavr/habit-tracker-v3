@@ -47,7 +47,9 @@ class SqlHabitRepository(HabitRepository):
     returned tz-aware UTC (`.replace(tzinfo=UTC)`). frequency stored as Frequency.value.
     add_checkin: SELECT first, raise CheckInExists if the row exists; additionally catch IntegrityError from the
     UNIQUE constraint inside `session.begin_nested()` and raise CheckInExists (race backstop).
-    delete_habit: deletes the row; check-ins go via ON DELETE CASCADE (also set passive_deletes on any relationship)."""
+    delete_habit: ONE `DELETE ... WHERE id = :id`; returns rowcount == 1 (two racing deletes: one True, one False);
+    check-ins go via ON DELETE CASCADE. update_habit: raises HabitNotFound if the row no longer exists.
+    Ids outside -2**63 .. 2**63-1 never reach SQL: get -> None, delete -> False, update -> HabitNotFound."""
     def __init__(self, session: Session) -> None: ...
 
 # ---------------------------------------------------------------- migrations/ (Alembic)

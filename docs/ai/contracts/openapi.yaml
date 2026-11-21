@@ -173,7 +173,7 @@ components:
       type: object
       required: [code, message, details]
       properties:
-        code: {type: string}       # validation_error | invalid_habit | invalid_range | future_checkin | habit_not_found | checkin_not_found | checkin_exists | habit_archived
+        code: {type: string}       # not_found (unknown route) | method_not_allowed (405, keeps Allow header) | validation_error | invalid_habit | invalid_range | future_checkin | habit_not_found | checkin_not_found | checkin_exists | habit_archived
         message: {type: string}
         details: {anyOf: [{type: array, items: {$ref: "#/components/schemas/ErrorDetail"}}, {type: "null"}]}
     Error:

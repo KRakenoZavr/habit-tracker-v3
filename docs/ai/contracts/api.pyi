@@ -34,7 +34,11 @@ def install_error_handlers(app: FastAPI) -> None:
     """DomainError -> status by code: *_not_found 404; checkin_exists, habit_archived 409;
     invalid_habit, invalid_range, future_checkin 422. Body {"error": {"code", "message": str(exc), "details": None}}.
     RequestValidationError -> 422 {"error": {"code": "validation_error", "message": "Request validation failed",
-    "details": [{"loc": [...], "msg": str}]}}."""
+    "details": [{"loc": [...], "msg": str}]}}.
+    starlette HTTPException (unknown route 404, 405, ...) -> same status and headers (e.g. Allow), body
+    {"error": {"code": "not_found" | "method_not_allowed" | "http_<status>", "message": str(exc.detail), "details": None}}."""
+# Request bodies are strict JSON: StrictInt / StrictBool / StrictStr (true or "3" for an int -> 422 validation_error).
+# Response models have no defaults for contract-required fields (Health.status, ErrorBody.details).
 
 # ---------------------------------------------------------------- habits/api/schemas.py
 # Pydantic v2 models whose CLASS NAMES equal the openapi.yaml component names (the contract test compares them):
