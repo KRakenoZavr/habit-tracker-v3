@@ -1,7 +1,7 @@
 ---
 id: T-0008
 title: Error envelope and exception handlers
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: api  # from docs/ai/modules.yaml
 depends_on: [T-0001, T-0007]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -57,3 +57,4 @@ Exists: `habits.core.DomainError` (+ subclasses with class attr `code`), `habits
 - 2026-11-21 21:23 status changes_requested -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:24 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:24 status in_review -> approved (by run_review): round 2
+- 2026-11-21 21:24 status approved -> integrated (by integrate): merged into int/M1
