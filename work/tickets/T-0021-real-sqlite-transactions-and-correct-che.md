@@ -1,7 +1,7 @@
 ---
 id: T-0021
 title: Real SQLite transactions and correct check-in conflict mapping
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: blocked  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: storage  # from docs/ai/modules.yaml
 depends_on: []  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -13,7 +13,7 @@ difficulty: M  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
 review_round: 0
-base: none               # set by run_executor.py
+base: int/M2  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/storage -x -q", "uv run --frozen ruff check src/habits/storage tests/storage", "uv run --frozen pyright src/habits/storage tests/storage/test_transactions.py"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
@@ -59,3 +59,5 @@ def _on_begin(conn):
 ## Log
 - 2026-11-21 21:59 created from batch batch-M2-fix.md (by architect)
 - 2026-11-21 21:59 status draft -> ready (by architect): batch lint clean
+- 2026-11-21 21:59 status ready -> in_progress (by run_executor): tier M, claude-cli sonnet
+- 2026-11-21 22:01 status in_progress -> blocked (by executor): Interface recipe (isolation_level=None + explicit BEGIN) makes B's get_habit SELECT hold a real read transaction, so A's commit of a delete fails with 'database is locked' in existing tests/storage/test_repository.py::test_racing_deletes and ::test_update_vanished_row (not in files_owned). Fix needs either those tests to end B's read txn (rollback) before A commits, or WAL journal mode (PRAGMA journal_mode=WAL in db.py connect listener) - architect decision. New tests in test_transactions.py pass; impl in db.py/repository.py is done.
