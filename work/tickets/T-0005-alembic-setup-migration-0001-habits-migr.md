@@ -1,7 +1,7 @@
 ---
 id: T-0005
 title: Alembic setup, migration 0001 habits, migrated DB fixture and drift test
-status: blocked  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: in_review  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: [T-0004]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -66,3 +66,7 @@ created_at DateTime not null).
 - 2026-11-21 21:13 status draft -> ready (by architect): batch lint clean
 - 2026-11-21 21:20 status ready -> in_progress (by run_executor): tier M, claude-cli sonnet
 - 2026-11-21 21:21 status in_progress -> blocked (by executor): BLOCKED: verify cannot pass here because the pytest temp root `C:\Users\KRaken\AppData\Local\Temp\pytest-of-KRaken` is not accessible.
+- 2026-11-21 21:25 status blocked -> draft (by architect): blocked by inaccessible system pytest temp root; fixed with --basetemp=.pytest_tmp on int/M1
+- 2026-11-21 21:25 status draft -> ready (by architect)
+- 2026-11-21 21:25 status ready -> in_progress (by architect)
+- 2026-11-21 21:26 status in_progress -> in_review (by run_executor): gates passed

@@ -1,7 +1,7 @@
 ---
 id: T-0002
 title: HabitRepository port, habit use cases and in-memory fake
-status: escalated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: core  # from docs/ai/modules.yaml
 depends_on: [T-0001]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -71,3 +71,5 @@ Existing (from the previous ticket): `Habit`, `HabitDraft`, `HabitPatch`, `Frequ
 - 2026-11-21 21:20 status ready -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:20 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:21 status in_review -> escalated (by run_review): round 1
+- 2026-11-21 21:25 status escalated -> draft (by architect): verify now runs pyright on test files
+- 2026-11-21 21:25 status draft -> ready (by architect)
