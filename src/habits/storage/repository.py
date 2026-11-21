@@ -103,6 +103,8 @@ class SqlHabitRepository(HabitRepository):
                 self._session.add(row)
                 self._session.flush()
         except IntegrityError as exc:
+            if self.get_habit(habit_id) is None:
+                raise HabitNotFound(f"habit {habit_id} not found") from exc
             raise CheckInExists(message) from exc
         return _to_checkin(row)
 

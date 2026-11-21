@@ -14,9 +14,14 @@ def make_engine(url: str) -> Engine:
 
         @event.listens_for(engine, "connect")
         def _set_sqlite_pragma(dbapi_connection: Any, connection_record: Any) -> None:
+            dbapi_connection.isolation_level = None
             cursor = dbapi_connection.cursor()
             cursor.execute("PRAGMA foreign_keys=ON")
             cursor.close()
+
+        @event.listens_for(engine, "begin")
+        def _emit_begin(conn: Any) -> None:
+            conn.exec_driver_sql("BEGIN IMMEDIATE")
 
     return engine
 
