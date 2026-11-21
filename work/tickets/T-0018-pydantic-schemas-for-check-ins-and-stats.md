@@ -62,4 +62,4 @@ Exists: `core.CheckIn(habit_id, day, created_at)`, `core.HabitStats(...)` with t
 - 2026-11-21 21:46 status in_review -> changes_requested (by run_review): round 1
 - 2026-11-21 21:46 status changes_requested -> in_progress (by run_executor): tier S, claude-cli sonnet
 - 2026-11-21 21:47 status in_progress -> in_review (by run_executor): gates passed
--
+- 2026-11-21 21:47 status in_review -> approved (by run_review): round 2
