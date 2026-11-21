@@ -1,7 +1,7 @@
 ---
 id: T-0019
 title: Check-in and stats routes
-status: ready  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: api  # from docs/ai/modules.yaml
 depends_on: [T-0017, T-0018]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -12,8 +12,8 @@ lock_resources: []       # lock files this ticket must touch (see .agents/config
 difficulty: M  # tier from .agents/config.json executor.tiers (S/M/L by default)
 context_budget_tokens: none   # none = tier's pack_tokens; a number overrides it for this ticket
 max_review_rounds: none       # none = budgets.max_review_rounds
-review_round: 0
-base: none               # set by run_executor.py
+review_round: 1
+base: int/M2  # set by run_executor.py
 tdd: none               # none = executor.tdd (tests first). false only for scaffolding/config/docs/test-only tickets; say why in Notes
 verify: ["uv run --frozen pytest tests/api -x -q", "uv run --frozen ruff check src/habits/api tests/api", "uv run --frozen pyright src/habits/api tests/api/test_checkins.py tests/api/test_stats.py"]  # e.g. ["pytest tests/core/test_x.py -x -q", "ruff check src/core/x.py"]
 ---
@@ -52,3 +52,9 @@ Exists: `services.check_in(repo, habit_id, day, today, now)`, `undo_check_in(rep
 ## Log
 - 2026-11-21 21:42 created from batch batch-M2.md (by architect)
 - 2026-11-21 21:42 status draft -> ready (by architect): batch lint clean
+- 2026-11-21 21:49 status ready -> in_progress (by run_executor): tier M, claude-cli sonnet
+- 2026-11-21 21:51 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:51 status in_review -> changes_requested (by run_review): round 1
+- 2026-11-21 21:51 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
+- 2026-11-21 21:53 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:53 status in_review -> approved (by run_review): round 2
