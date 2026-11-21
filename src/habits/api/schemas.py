@@ -2,9 +2,9 @@
 
 import re
 from datetime import date, datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, BeforeValidator, Field, StrictBool, StrictInt, StrictStr
 
 from habits import core
 
@@ -70,17 +70,19 @@ class Habit(BaseModel):
         )
 
 
-class CheckInCreate(BaseModel):
-    day: date | None = None
+def _iso_date(value: object) -> object:
+    if isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        return value
+    if isinstance(value, date) and not isinstance(value, datetime):
+        return value
+    raise ValueError("expected YYYY-MM-DD")
 
-    @field_validator("day", mode="before")
-    @classmethod
-    def _no_numbers(cls, v: object) -> object:
-        if isinstance(v, int | float):
-            raise ValueError("day must be a YYYY-MM-DD string")
-        if isinstance(v, str) and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", v):
-            raise ValueError("day must be a YYYY-MM-DD string")
-        return v
+
+IsoDate = Annotated[date, BeforeValidator(_iso_date)]
+
+
+class CheckInCreate(BaseModel):
+    day: IsoDate | None = None
 
 
 class CheckIn(BaseModel):

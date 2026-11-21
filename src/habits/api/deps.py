@@ -31,5 +31,5 @@ def get_now() -> datetime:
     return datetime.now(UTC)
 
 
-def get_today(request: Request) -> date:
-    return datetime.now(ZoneInfo(request.app.state.settings.timezone)).date()
+def get_today(request: Request, now: datetime = Depends(get_now)) -> date:
+    return now.astimezone(ZoneInfo(request.app.state.settings.timezone)).date()
