@@ -1,7 +1,7 @@
 ---
 id: T-0009
 title: App factory, request dependencies and habit routes
-status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: integrated  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: api  # from docs/ai/modules.yaml
 depends_on: [T-0006, T-0008]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -71,3 +71,4 @@ Exists: `services.create_habit(repo, draft, now)`, `get_habit`, `list_habits(rep
 - 2026-11-21 21:31 status changes_requested -> in_progress (by run_executor): tier M, claude-cli sonnet
 - 2026-11-21 21:32 status in_progress -> in_review (by run_executor): gates passed
 - 2026-11-21 21:32 status in_review -> approved (by run_review): round 2
+- 2026-11-21 21:32 status approved -> integrated (by integrate): merged into int/M1
