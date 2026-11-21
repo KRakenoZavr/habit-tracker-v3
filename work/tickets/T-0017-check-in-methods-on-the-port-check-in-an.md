@@ -1,7 +1,7 @@
 ---
 id: T-0017
 title: Check-in methods on the port, check-in and stats use cases, fake update
-status: in_progress  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M2
 module: core  # from docs/ai/modules.yaml
 depends_on: [T-0015, T-0016]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -56,3 +56,5 @@ Exists in `habits.core`: `CheckIn`, `HabitStats`, `validate_checkin_day`, `compu
 - 2026-11-21 21:42 created from batch batch-M2.md (by architect)
 - 2026-11-21 21:42 status draft -> ready (by architect): batch lint clean
 - 2026-11-21 21:47 status ready -> in_progress (by run_executor): tier M, claude-cli sonnet
+- 2026-11-21 21:48 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:49 status in_review -> approved (by run_review): round 1
