@@ -1,7 +1,7 @@
 ---
 id: T-0005
 title: Alembic setup, migration 0001 habits, migrated DB fixture and drift test
-status: in_review  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
+status: approved  # draft|ready|in_progress|in_review|changes_requested|approved|integrated|done|blocked|escalated
 milestone: M1
 module: storage  # from docs/ai/modules.yaml
 depends_on: [T-0004]  # ticket ids that must be integrated (merged into int/<milestone>) first
@@ -70,3 +70,4 @@ created_at DateTime not null).
 - 2026-11-21 21:25 status draft -> ready (by architect)
 - 2026-11-21 21:25 status ready -> in_progress (by architect)
 - 2026-11-21 21:26 status in_progress -> in_review (by run_executor): gates passed
+- 2026-11-21 21:26 status in_review -> approved (by run_review): round 1
