@@ -1,6 +1,11 @@
 %% covers: [src/**]
 %% verified_at: none
 %% owner: architect
+%% One request: POST /habits/{id}/checkins
 flowchart LR
-  input[/Input/] --> validate[Validate] --> transform[Transform] --> store[(Store)]
-  store --> present[Present / Render]
+  req[/HTTP JSON/] --> schema[api.schemas<br/>Pydantic parse] --> route[api.routes<br/>get_today, get_now, repo]
+  route --> svc[core.services.check_in<br/>rules + errors]
+  svc --> repo[storage.SqlHabitRepository<br/>flush] --> db[(SQLite)]
+  svc -- DomainError --> err[api.errors<br/>Error envelope]
+  route --> out[/201 CheckIn JSON/]
+  route -. commit / rollback .-> sess[api.deps.get_session]

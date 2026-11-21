@@ -1,0 +1,182 @@
+# covers: [src/habits/api/**]
+# verified_at: none
+# owner: architect
+# Source of truth for the HTTP API (ADR-0004). tests/api/test_contract.py checks app.openapi() against this file.
+openapi: 3.1.0
+info:
+  title: Habit Tracker API
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        "200": {description: OK, content: {application/json: {schema: {$ref: "#/components/schemas/Health"}}}}
+  /habits:
+    get:
+      operationId: list_habits
+      parameters:
+        - {name: include_archived, in: query, required: false, schema: {type: boolean, default: false}}
+      responses:
+        "200":
+          description: Habits ordered by id ascending
+          content: {application/json: {schema: {type: array, items: {$ref: "#/components/schemas/Habit"}}}}
+        "422": {$ref: "#/components/responses/Unprocessable"}
+    post:
+      operationId: create_habit
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: "#/components/schemas/HabitCreate"}}}
+      responses:
+        "201": {description: Created, content: {application/json: {schema: {$ref: "#/components/schemas/Habit"}}}}
+        "422": {$ref: "#/components/responses/Unprocessable"}   # validation_error | invalid_habit
+  /habits/{habit_id}:
+    parameters:
+      - {name: habit_id, in: path, required: true, schema: {type: integer}}
+    get:
+      operationId: get_habit
+      responses:
+        "200": {description: OK, content: {application/json: {schema: {$ref: "#/components/schemas/Habit"}}}}
+        "404": {$ref: "#/components/responses/NotFound"}        # habit_not_found
+        "422": {$ref: "#/components/responses/Unprocessable"}
+    patch:
+      operationId: update_habit
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: "#/components/schemas/HabitUpdate"}}}
+      responses:
+        "200": {description: OK, content: {application/json: {schema: {$ref: "#/components/schemas/Habit"}}}}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "422": {$ref: "#/components/responses/Unprocessable"}
+    delete:
+      operationId: delete_habit
+      description: Deletes the habit and all its check-ins.
+      responses:
+        "204": {description: Deleted}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "422": {$ref: "#/components/responses/Unprocessable"}
+  /habits/{habit_id}/checkins:        # M2
+    parameters:
+      - {name: habit_id, in: path, required: true, schema: {type: integer}}
+    get:
+      operationId: list_checkins
+      parameters:
+        - {name: start, in: query, required: false, schema: {type: string, format: date}}
+        - {name: end, in: query, required: false, schema: {type: string, format: date}}
+      responses:
+        "200":
+          description: Check-ins with start <= day <= end, ordered by day ascending
+          content: {application/json: {schema: {type: array, items: {$ref: "#/components/schemas/CheckIn"}}}}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "422": {$ref: "#/components/responses/Unprocessable"}  # validation_error | invalid_range
+    post:
+      operationId: create_checkin
+      requestBody:
+        required: false
+        content: {application/json: {schema: {$ref: "#/components/schemas/CheckInCreate"}}}
+      responses:
+        "201": {description: Created, content: {application/json: {schema: {$ref: "#/components/schemas/CheckIn"}}}}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "409": {$ref: "#/components/responses/Conflict"}       # checkin_exists | habit_archived
+        "422": {$ref: "#/components/responses/Unprocessable"}  # validation_error | future_checkin
+  /habits/{habit_id}/checkins/{day}:  # M2
+    parameters:
+      - {name: habit_id, in: path, required: true, schema: {type: integer}}
+      - {name: day, in: path, required: true, schema: {type: string, format: date}}
+    delete:
+      operationId: delete_checkin
+      responses:
+        "204": {description: Deleted}
+        "404": {$ref: "#/components/responses/NotFound"}       # habit_not_found | checkin_not_found
+        "422": {$ref: "#/components/responses/Unprocessable"}
+  /habits/{habit_id}/stats:           # M2
+    parameters:
+      - {name: habit_id, in: path, required: true, schema: {type: integer}}
+    get:
+      operationId: get_stats
+      responses:
+        "200": {description: OK, content: {application/json: {schema: {$ref: "#/components/schemas/Stats"}}}}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "422": {$ref: "#/components/responses/Unprocessable"}
+components:
+  responses:
+    NotFound: {description: Not found, content: {application/json: {schema: {$ref: "#/components/schemas/Error"}}}}
+    Conflict: {description: Conflict, content: {application/json: {schema: {$ref: "#/components/schemas/Error"}}}}
+    Unprocessable: {description: Invalid input, content: {application/json: {schema: {$ref: "#/components/schemas/Error"}}}}
+  schemas:
+    Health:
+      type: object
+      required: [status]
+      properties: {status: {type: string, const: ok}}
+    Frequency: {type: string, enum: [daily, weekly]}
+    HabitCreate:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 100}       # stripped; blank -> 422 invalid_habit
+        description: {type: [string, "null"], maxLength: 500, default: null}
+        frequency: {$ref: "#/components/schemas/Frequency", default: daily}
+        target_per_week: {type: [integer, "null"], minimum: 1, maximum: 7, default: null}  # required iff weekly
+    HabitUpdate:
+      type: object
+      description: >
+        Absent field = unchanged. description null or "" clears it. target_per_week null = unchanged;
+        switching to daily clears target_per_week; switching to weekly needs a target (existing or in the body).
+      properties:
+        name: {type: [string, "null"], minLength: 1, maxLength: 100}
+        description: {type: [string, "null"], maxLength: 500}
+        frequency: {anyOf: [{$ref: "#/components/schemas/Frequency"}, {type: "null"}]}
+        target_per_week: {type: [integer, "null"], minimum: 1, maximum: 7}
+        archived: {type: [boolean, "null"]}
+    Habit:
+      type: object
+      required: [id, name, description, frequency, target_per_week, archived, created_at]
+      properties:
+        id: {type: integer}
+        name: {type: string}
+        description: {type: [string, "null"]}
+        frequency: {$ref: "#/components/schemas/Frequency"}
+        target_per_week: {type: [integer, "null"]}
+        archived: {type: boolean}
+        created_at: {type: string, format: date-time}            # UTC, ISO 8601 with offset
+    CheckInCreate:
+      type: object
+      properties:
+        day: {type: [string, "null"], format: date, default: null}   # null/absent/no body -> today (HABITS_TIMEZONE)
+    CheckIn:
+      type: object
+      required: [habit_id, day, created_at]
+      properties:
+        habit_id: {type: integer}
+        day: {type: string, format: date}
+        created_at: {type: string, format: date-time}
+    Stats:
+      type: object
+      required: [habit_id, streak_unit, current_streak, longest_streak, total_checkins, period_count, period_target, period_done, as_of]
+      properties:
+        habit_id: {type: integer}
+        streak_unit: {type: string, enum: [day, week]}
+        current_streak: {type: integer, minimum: 0}
+        longest_streak: {type: integer, minimum: 0}
+        total_checkins: {type: integer, minimum: 0}
+        period_count: {type: integer, minimum: 0}
+        period_target: {type: integer, minimum: 1}
+        period_done: {type: boolean}
+        as_of: {type: string, format: date}
+    ErrorDetail:
+      type: object
+      required: [loc, msg]
+      properties:
+        loc: {type: array, items: {anyOf: [{type: string}, {type: integer}]}}
+        msg: {type: string}
+    ErrorBody:
+      type: object
+      required: [code, message, details]
+      properties:
+        code: {type: string}       # validation_error | invalid_habit | invalid_range | future_checkin | habit_not_found | checkin_not_found | checkin_exists | habit_archived
+        message: {type: string}
+        details: {anyOf: [{type: array, items: {$ref: "#/components/schemas/ErrorDetail"}}, {type: "null"}]}
+    Error:
+      type: object
+      required: [error]
+      properties: {error: {$ref: "#/components/schemas/ErrorBody"}}

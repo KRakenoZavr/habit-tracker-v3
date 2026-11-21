@@ -4,24 +4,32 @@ verified_at: none
 owner: human
 ---
 # Vision
-<!-- Written by the human together with the architect agent in Phase 0. The human owns this file. -->
 
 ## Goal
-<What will exist when this project is done, in 2–4 sentences.>
+A small, self-hosted HTTP API for tracking personal habits. The user creates habits (daily, or "N times per week"),
+records check-ins per day, and asks for streaks and progress. The code base demonstrates a clean
+core / storage / API split with an OpenAPI contract, a dependency lock file and Alembic migrations.
 
-## Users / players
-<Who uses it and what they want.>
+## Users
+- One person running the API locally (or on a private box) and calling it from a script, a phone shortcut or a future UI.
+  They want: "did I do it today?", "how long is my streak?", "how far am I this week?".
 
 ## Non-goals
-- <Explicitly out of scope.>
+- Authentication, multiple users, sharing (single-user API; see ADR-0002).
+- A UI (web or mobile), notifications/reminders, data import/export.
+- Habits scheduled on specific weekdays, or with several check-ins per day.
+- Horizontal scaling, other databases than SQLite, async DB drivers.
 
 ## Constraints
-- Stack: <engine/language/framework + versions>
-- Platforms: <...>
-- Performance / size / budget limits: <...>
+- Stack: Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 (sync), Alembic, SQLite. Dependencies and lock via `uv` (`uv.lock`).
+- Platforms: Windows, Linux, macOS (dev machine is Windows).
+- "Today" is computed in one configured time zone (`HABITS_TIMEZONE`, default `UTC`); the domain never reads the clock.
 
 ## Quality bar
-- <e.g. 60 FPS on target hardware; p95 latency < 100 ms; zero warnings in CI.>
+- `ruff format --check`, `ruff check`, `pyright` (strict on `src/`) and `pytest` all green; no warnings.
+- Every endpoint in `docs/ai/contracts/openapi.yaml` exists in the app with the same status codes (contract test).
+- `alembic upgrade head` on an empty file produces exactly the ORM schema (migration drift test).
+- Import boundaries between modules are enforced by a test.
 
 ## Open questions
-- <Resolve before slicing milestone 1.>
+- none (resolved in Phase 0: single user, daily + weekly-target habits, SQLAlchemy + Alembic).

@@ -2,11 +2,9 @@
 %% verified_at: none
 %% owner: architect
 flowchart LR
-  user([User / Player])
-  sys[[<System name>]]
-  ext1[(External service / store)]
-  ext2[Third-party API]
+  user([Single user<br/>script, shortcut, future UI])
+  sys[[Habit Tracker API]]
+  db[(SQLite file)]
 
-  user -->|uses| sys
-  sys -->|reads/writes| ext1
-  sys -->|calls| ext2
+  user -->|HTTP JSON, no auth| sys
+  sys -->|reads/writes| db

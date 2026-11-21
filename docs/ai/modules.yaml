@@ -1,32 +1,36 @@
-# covers: [src/**]
+# covers: [src/**, migrations/**]
 # verified_at: none
 # owner: architect
 #
 # Source of truth for the module graph. The human-facing diagram
 # docs/architecture/c4-container.mmd and docs/human/architecture.md are derived from this file.
 # Each module is an ownership boundary: one ticket should stay inside one module.
+# Python package: habits (src layout). Tests mirror it: tests/core, tests/storage, tests/api.
 
 modules:
   core:
-    path: "src/core/**"
-    purpose: "Pure domain logic. No I/O."
-    public_api: "docs/ai/contracts/core.md"
+    path: "src/habits/core/**"
+    purpose: "Pure domain: dataclasses, domain errors, validation, streak rules, use cases over the HabitRepository port. No I/O, no clock."
+    public_api: "docs/ai/contracts/core.pyi"
     depends_on: []
-  io:
-    path: "src/io/**"
-    purpose: "Persistence, network, filesystem adapters."
-    public_api: "docs/ai/contracts/io.md"
+  storage:
+    path: ["src/habits/storage/**", "migrations/**", "alembic.ini"]
+    purpose: "SQLAlchemy 2 engine/session, ORM rows, SqlHabitRepository (implements core.HabitRepository), Alembic migrations."
+    public_api: "docs/ai/contracts/storage.pyi"
     depends_on: [core]
-  app:
-    path: "src/app/**"
-    purpose: "Wiring, CLI/UI entry points."
-    public_api: null
-    depends_on: [core, io]
+  api:
+    path: "src/habits/api/**"
+    purpose: "FastAPI app factory, settings, per-request session, Pydantic schemas, routes, error envelope."
+    public_api: "docs/ai/contracts/openapi.yaml (HTTP) + docs/ai/contracts/api.pyi (wiring)"
+    depends_on: [core, storage]
 
-# Edges that must never exist. Check them in the architect's holistic review
-# (or add a dependency linter for your stack to verify.commands).
+# Edges that must never exist. tests/test_architecture.py enforces them by parsing imports.
 forbidden_edges:
-  - "core -> io"
-  - "core -> app"
+  - "core -> storage"
+  - "core -> api"
+  - "storage -> api"
+  - "core -> sqlalchemy|fastapi|pydantic|alembic"
+  - "storage -> fastapi|pydantic"
 
-# Parallel-safety lock files live in .agents/config.json -> lock_resources.
+# Parallel-safety lock files live in .agents/config.json -> lock_resources (migrations/**, alembic.ini).
+# pyproject.toml and uv.lock are architect-only (protected_globs).

@@ -3,12 +3,17 @@
 %% owner: architect
 %% Derived from docs/ai/modules.yaml — update that file first.
 flowchart TB
-  subgraph sys[<System name>]
-    app[app<br/>wiring, entry points]
-    io[io<br/>adapters]
-    core[core<br/>pure domain logic]
+  client([HTTP client])
+  subgraph sys[Habit Tracker API - Python package habits]
+    api[api<br/>FastAPI routes, schemas,<br/>error envelope, settings]
+    core[core<br/>dataclasses, rules, streaks,<br/>use cases, HabitRepository port]
+    storage[storage<br/>SQLAlchemy rows,<br/>SqlHabitRepository]
   end
-  app --> core
-  app --> io
-  io --> core
-  io --> db[(Database / files)]
+  mig[[Alembic migrations<br/>migrations/versions]]
+  db[(SQLite file<br/>habits.db)]
+  client -->|JSON over HTTP| api
+  api -->|calls use cases| core
+  api -->|builds session + repo| storage
+  storage -.->|implements port| core
+  storage -->|SQL| db
+  mig -->|upgrade head| db

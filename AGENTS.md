@@ -14,10 +14,11 @@ Write only NON-OBVIOUS rules. No architecture tours, no generic advice ("write c
 
 ## Commands
 <!-- Fill in when the stack is chosen. Keep the exact, copy-pasteable form. -->
-- Build: `<cmd>`
-- Test (all): `<cmd>`
-- Test (single): `<cmd> <path>`
-- Lint/format: `<cmd>`
+- Build: `uv sync --frozen` (dependencies are architect-only; never `uv add`/`uv lock`)
+- Test (all): `uv run --frozen pytest -q`
+- Test (single): `uv run --frozen pytest -q <path>`
+- Lint/format: `uv run --frozen ruff format . && uv run --frozen ruff check . && uv run --frozen pyright`
+- Migrate / run: `uv run --frozen alembic upgrade head` · `uv run --frozen uvicorn habits.api.app:app`
 - Agent gate: `python scripts/agent/verify.py <ticket-id>`
 
 ## Where things are
@@ -33,13 +34,9 @@ Write only NON-OBVIOUS rules. No architecture tours, no generic advice ("write c
 
 ## Non-obvious conventions
 <!-- Only what a competent engineer would get WRONG in this repo. Delete the examples. -->
-- <example: All public functions in src/core are pure; side effects live in src/io.>
-- <example: Time is always UTC, passed in as a parameter, never read from the clock inside logic.>
+- `habits.core` is pure: no I/O, no clock; `now`/`today` are parameters. Details: `docs/ai/conventions.md`.
+- The HTTP contract is `docs/ai/contracts/openapi.yaml`; code follows it, never the other way round.
 
 ## Active stack profiles
 <!-- Delete the ones you don't use. Read a profile only when touching that stack. -->
 - `.agents/profiles/python.md`
-- `.agents/profiles/rust.md`
-- `.agents/profiles/unity.md`
-- `.agents/profiles/unreal.md`
-- `.agents/profiles/web-design-system.md`
