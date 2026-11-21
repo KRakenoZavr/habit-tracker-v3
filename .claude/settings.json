@@ -1,0 +1,45 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/scripts/agent/hooks/guard_paths.py\" write"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/scripts/agent/hooks/guard_paths.py\" read"
+          }
+        ]
+      }
+    ]
+  },
+  "model": "opus",
+  "permissions": {
+    "allow": [
+      "Bash(rtk python:*)",
+      "Bash(rtk python3:*)",
+      "Bash(rtk git status:*)",
+      "Bash(rtk git diff:*)",
+      "Bash(rtk bypass python:*)",
+      "Bash(rtk bypass python3:*)",
+      "Bash(rtk bypass git status:*)",
+      "Bash(rtk bypass git diff:*)",
+      "PowerShell(rtk python:*)",
+      "PowerShell(rtk python3:*)",
+      "PowerShell(rtk git status:*)",
+      "PowerShell(rtk git diff:*)",
+      "PowerShell(rtk bypass python:*)",
+      "PowerShell(rtk bypass python3:*)",
+      "PowerShell(rtk bypass git status:*)",
+      "PowerShell(rtk bypass git diff:*)"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+%% covers: [src/io/**]
+%% verified_at: none
+%% owner: architect
+erDiagram
+  USER ||--o{ SESSION : has
+  USER {
+    uuid id PK
+    string name
+    datetime created_at
+  }
+  SESSION {
+    uuid id PK
+    uuid user_id FK
+    datetime started_at
+  }

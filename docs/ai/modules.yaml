@@ -1,0 +1,32 @@
+# covers: [src/**]
+# verified_at: none
+# owner: architect
+#
+# Source of truth for the module graph. The human-facing diagram
+# docs/architecture/c4-container.mmd and docs/human/architecture.md are derived from this file.
+# Each module is an ownership boundary: one ticket should stay inside one module.
+
+modules:
+  core:
+    path: "src/core/**"
+    purpose: "Pure domain logic. No I/O."
+    public_api: "docs/ai/contracts/core.md"
+    depends_on: []
+  io:
+    path: "src/io/**"
+    purpose: "Persistence, network, filesystem adapters."
+    public_api: "docs/ai/contracts/io.md"
+    depends_on: [core]
+  app:
+    path: "src/app/**"
+    purpose: "Wiring, CLI/UI entry points."
+    public_api: null
+    depends_on: [core, io]
+
+# Edges that must never exist. Check them in the architect's holistic review
+# (or add a dependency linter for your stack to verify.commands).
+forbidden_edges:
+  - "core -> io"
+  - "core -> app"
+
+# Parallel-safety lock files live in .agents/config.json -> lock_resources.

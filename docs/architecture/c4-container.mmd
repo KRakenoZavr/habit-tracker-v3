@@ -1,0 +1,14 @@
+%% covers: [src/**, docs/ai/modules.yaml]
+%% verified_at: none
+%% owner: architect
+%% Derived from docs/ai/modules.yaml — update that file first.
+flowchart TB
+  subgraph sys[<System name>]
+    app[app<br/>wiring, entry points]
+    io[io<br/>adapters]
+    core[core<br/>pure domain logic]
+  end
+  app --> core
+  app --> io
+  io --> core
+  io --> db[(Database / files)]

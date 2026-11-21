@@ -1,0 +1,15 @@
+# Agent scratch
+work/.pack/
+.aider*
+!.aiderignore
+.claude/settings.local.json
+CLAUDE.local.md
+# Local marker: makes this checkout (e.g. a Claude Code worktree) the control root, see scripts/agent/common.py
+.agent-control-root
+__pycache__/
+*.pyc
+
+# Add your stack's ignores below (see .agents/profiles/*.md)
+
+# Ticket worktrees (git worktree checkouts; metadata lives in .git/worktrees)
+.worktrees/

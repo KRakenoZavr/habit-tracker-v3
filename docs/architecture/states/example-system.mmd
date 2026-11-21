@@ -1,0 +1,12 @@
+%% covers: [src/core/**]
+%% verified_at: none
+%% owner: architect
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running: start
+  Running --> Paused: pause
+  Paused --> Running: resume
+  Running --> Finished: complete
+  Running --> Failed: error
+  Failed --> Idle: reset
+  Finished --> [*]

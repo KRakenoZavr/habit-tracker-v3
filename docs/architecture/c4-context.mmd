@@ -1,0 +1,12 @@
+%% covers: [src/**]
+%% verified_at: none
+%% owner: architect
+flowchart LR
+  user([User / Player])
+  sys[[<System name>]]
+  ext1[(External service / store)]
+  ext2[Third-party API]
+
+  user -->|uses| sys
+  sys -->|reads/writes| ext1
+  sys -->|calls| ext2

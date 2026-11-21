@@ -1,0 +1,10 @@
+# Keep the repo map small for local executors
+work/
+docs/human/
+docs/adr/
+docs/plan/
+.agents/
+.claude/
+.gemini/
+scripts/agent/
+.worktrees/

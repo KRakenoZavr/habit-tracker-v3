@@ -1,0 +1,6 @@
+%% covers: [src/**]
+%% verified_at: none
+%% owner: architect
+flowchart LR
+  input[/Input/] --> validate[Validate] --> transform[Transform] --> store[(Store)]
+  store --> present[Present / Render]
