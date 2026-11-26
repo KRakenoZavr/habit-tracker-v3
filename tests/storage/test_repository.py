@@ -115,23 +115,23 @@ def test_racing_deletes(two_sessions: tuple[Session, Session]) -> None:
     a, b = two_sessions
     habit = SqlHabitRepository(a).add_habit(HabitDraft(name="Race"), CREATED)
     a.commit()
-    repo_b = SqlHabitRepository(b)
-    assert repo_b.get_habit(habit.id) is not None
+    assert SqlHabitRepository(b).get_habit(habit.id) is not None
+    b.rollback()
     assert SqlHabitRepository(a).delete_habit(habit.id) is True
     a.commit()
-    assert repo_b.delete_habit(habit.id) is False
+    assert SqlHabitRepository(b).delete_habit(habit.id) is False
 
 
 def test_update_vanished_row(two_sessions: tuple[Session, Session]) -> None:
     a, b = two_sessions
     habit = SqlHabitRepository(a).add_habit(HabitDraft(name="Gone"), CREATED)
     a.commit()
-    repo_b = SqlHabitRepository(b)
-    assert repo_b.get_habit(habit.id) is not None
+    assert SqlHabitRepository(b).get_habit(habit.id) is not None
+    b.rollback()
     assert SqlHabitRepository(a).delete_habit(habit.id) is True
     a.commit()
     with pytest.raises(HabitNotFound):
-        repo_b.update_habit(replace(habit, name="Changed"))
+        SqlHabitRepository(b).update_habit(replace(habit, name="Changed"))
 
 
 def test_out_of_range_ids(session: Session) -> None:

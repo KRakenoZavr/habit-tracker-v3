@@ -1,5 +1,5 @@
 # covers: [src/**, migrations/**]
-# verified_at: none
+# verified_at: cc7dbb2
 # owner: architect
 #
 # Source of truth for the module graph. The human-facing diagram

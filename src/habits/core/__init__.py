@@ -11,24 +11,32 @@ from habits.core.errors import (
 from habits.core.models import (
     DESCRIPTION_MAX,
     NAME_MAX,
+    CheckIn,
     Frequency,
     Habit,
     HabitDraft,
     HabitPatch,
+    HabitStats,
 )
 from habits.core.ports import HabitRepository
-from habits.core.rules import apply_patch, validate_draft
+from habits.core.rules import apply_patch, validate_checkin_day, validate_draft
 from habits.core.services import (
+    check_in,
     create_habit,
     delete_habit,
     get_habit,
+    get_stats,
+    list_check_ins,
     list_habits,
+    undo_check_in,
     update_habit,
 )
+from habits.core.streaks import compute_stats, week_start
 
 __all__ = [
     "DESCRIPTION_MAX",
     "NAME_MAX",
+    "CheckIn",
     "CheckInExists",
     "CheckInNotFound",
     "DomainError",
@@ -40,13 +48,21 @@ __all__ = [
     "HabitNotFound",
     "HabitPatch",
     "HabitRepository",
+    "HabitStats",
     "InvalidHabit",
     "InvalidRange",
     "apply_patch",
+    "check_in",
+    "compute_stats",
     "create_habit",
     "delete_habit",
     "get_habit",
+    "get_stats",
+    "list_check_ins",
     "list_habits",
+    "undo_check_in",
     "update_habit",
+    "validate_checkin_day",
     "validate_draft",
+    "week_start",
 ]

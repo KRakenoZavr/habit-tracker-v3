@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Protocol
 
-from habits.core.models import Habit, HabitDraft
+from habits.core.models import CheckIn, Habit, HabitDraft
 
 
 class HabitRepository(Protocol):
@@ -16,3 +16,9 @@ class HabitRepository(Protocol):
     def update_habit(self, habit: Habit) -> Habit: ...
 
     def delete_habit(self, habit_id: int) -> bool: ...
+
+    def add_checkin(self, habit_id: int, day: date, created_at: datetime) -> CheckIn: ...
+
+    def delete_checkin(self, habit_id: int, day: date) -> bool: ...
+
+    def list_checkins(self, habit_id: int, start: date | None, end: date | None) -> list[CheckIn]: ...

@@ -1,6 +1,6 @@
 ---
 covers: [src/**, tests/**]
-verified_at: none
+verified_at: cc7dbb2
 owner: architect
 ---
 # Conventions (non-obvious only)

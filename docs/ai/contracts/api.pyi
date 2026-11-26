@@ -26,7 +26,8 @@ class Settings:
 def get_session(request: Request) -> Iterator[Session]: ...   # yield session; commit on success, rollback on exception, always close
 def get_repo(session: Session = ...) -> HabitRepository: ...   # SqlHabitRepository(session)
 def get_now() -> datetime: ...                                 # datetime.now(UTC)
-def get_today(request: Request) -> date: ...                   # datetime.now(ZoneInfo(settings.timezone)).date()
+def get_today(request: Request, now: datetime = ...) -> date: ...  # Depends(get_now): now.astimezone(ZoneInfo(tz)).date() — one clock read
+# Dates in query/path/body are IsoDate (strict "YYYY-MM-DD"; timestamps/datetimes -> 422). POST check-in body: absent ok, JSON null -> 422.
 # Tests override get_now / get_today via app.dependency_overrides.
 
 # ---------------------------------------------------------------- habits/api/errors.py
