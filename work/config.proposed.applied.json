@@ -1,0 +1,41 @@
+{
+  "_comment": "Phase 0 proposal for the Python/FastAPI stack (ADR-0001, ADR-0003). Apply with: python scripts/agent/config_apply.py",
+  "verify": {
+    "commands": [
+      "uv run --frozen ruff format --check .",
+      "uv run --frozen ruff check .",
+      "uv run --frozen pyright",
+      "uv run --frozen pytest -x -q"
+    ],
+    "fix_commands": [
+      "uv run --frozen ruff format {files}",
+      "uv run --frozen ruff check --fix-only {files}"
+    ]
+  },
+  "executor": {
+    "claude_cli": {
+      "extra_allowed_tools": [
+        "Bash(uv run --frozen:*)",
+        "Bash(uv sync --frozen:*)"
+      ]
+    }
+  },
+  "lock_resources": [
+    "migrations/**",
+    "alembic.ini",
+    "tests/conftest.py"
+  ],
+  "protected_globs": [
+    "AGENTS.md",
+    ".agents/config.json",
+    "work/archive/**",
+    "pyproject.toml",
+    "uv.lock"
+  ],
+  "loop": {
+    "calibration": {
+      "enabled": true,
+      "tickets": 3
+    }
+  }
+}

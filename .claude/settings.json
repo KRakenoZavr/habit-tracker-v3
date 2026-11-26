@@ -39,7 +39,15 @@
       "PowerShell(rtk bypass python:*)",
       "PowerShell(rtk bypass python3:*)",
       "PowerShell(rtk bypass git status:*)",
-      "PowerShell(rtk bypass git diff:*)"
+      "PowerShell(rtk bypass git diff:*)",
+      "Bash(rtk uv run --frozen:*)",
+      "Bash(rtk uv sync --frozen:*)",
+      "Bash(rtk bypass uv run --frozen:*)",
+      "Bash(rtk bypass uv sync --frozen:*)",
+      "PowerShell(rtk uv run --frozen:*)",
+      "PowerShell(rtk uv sync --frozen:*)",
+      "PowerShell(rtk bypass uv run --frozen:*)",
+      "PowerShell(rtk bypass uv sync --frozen:*)"
     ]
   }
 }

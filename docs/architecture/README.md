@@ -1,6 +1,6 @@
 ---
 covers: [docs/architecture/**]
-verified_at: none
+verified_at: cc7dbb2
 owner: architect
 ---
 # Diagrams — single source for both doc sets

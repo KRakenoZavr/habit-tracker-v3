@@ -1,15 +1,21 @@
-%% covers: [src/io/**]
-%% verified_at: none
+%% covers: [src/habits/storage/**, migrations/**]
+%% verified_at: cc7dbb2
 %% owner: architect
+%% habits: migration 0001 (M1). checkins: migration 0002 (M2), UNIQUE(habit_id, day), FK ON DELETE CASCADE.
 erDiagram
-  USER ||--o{ SESSION : has
-  USER {
-    uuid id PK
-    string name
-    datetime created_at
+  HABITS ||--o{ CHECKINS : has
+  HABITS {
+    int id PK
+    string name "varchar(100) not null"
+    string description "varchar(500) null"
+    string frequency "daily|weekly, ck_habits_frequency"
+    int target_per_week "null for daily, 1..7"
+    bool archived "default false"
+    datetime created_at "naive UTC"
   }
-  SESSION {
-    uuid id PK
-    uuid user_id FK
-    datetime started_at
+  CHECKINS {
+    int id PK
+    int habit_id FK "habits.id on delete cascade"
+    date day "uq_checkins_habit_day"
+    datetime created_at "naive UTC"
   }

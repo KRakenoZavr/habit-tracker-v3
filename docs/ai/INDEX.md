@@ -1,6 +1,6 @@
 ---
 covers: [docs/ai/**, docs/architecture/**]
-verified_at: none
+verified_at: cc7dbb2
 owner: architect
 ---
 # AI doc index — read ONLY the rows that match your task

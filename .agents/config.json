@@ -66,7 +66,10 @@
         "Read,Edit,Write,Glob,Grep,Bash(python:*),Bash(python3:*),Bash(git status:*),Bash(git diff:*)"
       ],
       "prompt_via": "stdin",
-      "extra_allowed_tools": [],
+      "extra_allowed_tools": [
+        "Bash(uv run --frozen:*)",
+        "Bash(uv sync --frozen:*)"
+      ],
       "_extra_allowed_tools_comment": "Stack commands headless workers may run, appended to --allowedTools. Proposed by the architect in Phase 0, e.g. [\"Bash(cargo:*)\"] or [\"Bash(pytest:*)\", \"Bash(ruff:*)\"].",
       "timeout_seconds": 1800,
       "command_prefixes": [
@@ -185,17 +188,31 @@
   },
   "verify": {
     "_comment": "Global gate commands run for every ticket (after the ticket's own verify list). Fill these from your stack profile.",
-    "commands": [],
-    "fix_commands": [],
+    "commands": [
+      "uv run --frozen ruff format --check .",
+      "uv run --frozen ruff check .",
+      "uv run --frozen pyright",
+      "uv run --frozen pytest -x -q"
+    ],
+    "fix_commands": [
+      "uv run --frozen ruff format {files}",
+      "uv run --frozen ruff check --fix-only {files}"
+    ],
     "_fix_commands_comment": "Auto-fixers run in the ticket worktree BEFORE the gates (formatters, `lint --fix`), so a formatting slip never costs a whole worker run. {files} = the ticket's changed files that exist (quoted); without {files} the command runs as written. Python: [\"uv run --frozen ruff format {files}\", \"uv run --frozen ruff check --fix-only {files}\"]."
   },
   "protected_globs": [
     "AGENTS.md",
     ".agents/config.json",
-    "work/archive/**"
+    "work/archive/**",
+    "pyproject.toml",
+    "uv.lock"
   ],
   "_lock_resources_comment": "Files that two parallel tickets must never both touch. Examples: Cargo.lock, Cargo.toml, pyproject.toml, package-lock.json, migrations/**, Assets/Scenes/**, *.uproject",
-  "lock_resources": [],
+  "lock_resources": [
+    "migrations/**",
+    "alembic.ini",
+    "tests/conftest.py"
+  ],
   "_generated_globs_comment": "Lock files and other generated files. Agents see their NAMES (and size / changed-line counts) but never their content: packs list them without content, the reviewer gets only their line counts, and the read hook blocks Read on them. Change them with their tool (uv lock, npm install), never by hand.",
   "generated_globs": [
     "**/*.lock",

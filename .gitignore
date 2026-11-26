@@ -13,3 +13,11 @@ __pycache__/
 
 # Ticket worktrees (git worktree checkouts; metadata lives in .git/worktrees)
 .worktrees/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+dist/
+*.egg-info/
+*.db
+.pytest_tmp/
